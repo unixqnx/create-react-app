@@ -1,8 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './others/index.css';
-import App from './others/App';
-import registerServiceWorker from './others/registerServiceWorker';
+import ReactDom from 'react-dom';
+import App from './components/App';
 
-ReactDOM.render(<App />, document.getElementById('root'));
-registerServiceWorker();
+const arr = [1,2,3,4,5,6,7,8,9,0];
+
+
+ReactDom.render(<App arr={arr}/>, document.getElementById('root'))
