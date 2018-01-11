@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import App from './components/App';
+import ToDoListApp from './components/ToDoListApp';
 
-const arr = [1,2,3,4,5,6,7,8,9,0];
+const arr = [10,20,30,40,50];
 
 
-ReactDom.render(<App arr={arr}/>, document.getElementById('root'))
+ReactDom.render(<ToDoListApp arr={arr}/>, document.getElementById('root'))

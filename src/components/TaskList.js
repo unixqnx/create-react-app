@@ -3,17 +3,14 @@ import React, {Component} from 'react';
 import TaskItem from './TaskItem';
 
 class TaskList extends Component {
-    
     constructor(props){
         super(props);
-        this.state = { List: this.props.List };
     }
-    
+
     render(){
-        const items = this.state.List.map((current, index) => <TaskItem key={index} task={current}/>);
         return <table>
             <tbody>
-                {items}
+                {this.props.List.map((current, index) => <TaskItem key={current} index={index} task={current} updateTask={this.props.updateTask} deleteTask={this.props.deleteTask}/>)}
             </tbody>
         </table>;
     }
