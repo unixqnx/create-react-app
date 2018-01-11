@@ -5,11 +5,14 @@ class TaskItem extends Component{
     constructor(props){
         super(props);
         this.state = { editMode: false, 
-                       value:this.props.task
+                       value:this.props.task,
+                       hasDone:false,
+                       hasError:false
                     };
         this.editButtonHandler = this.editButtonHandler.bind(this);
         this.deleteButtonHandler = this.deleteButtonHandler.bind(this);
         this.onChangeValue = this.onChangeValue.bind(this);
+        this.onClickTask = this.onClickTask.bind(this);
         this._calculateButton = this._calculateButton.bind(this);
     }
 
@@ -21,9 +24,16 @@ class TaskItem extends Component{
 
     editButtonHandler(e){
         if(this.state.editMode){
-            this.props.updateTask(this.state.value, this.props.index);
+            const saccess = this.props.updateTask(this.state.value, this.props.index);
+
+            if(saccess){
+                this._calculateButton();
+            }
+
+            this.setState({hasError: !saccess});
+        }else{
+            this._calculateButton();
         }
-        this._calculateButton ();
     }
 
     deleteButtonHandler(e){
@@ -41,6 +51,12 @@ class TaskItem extends Component{
        this.setState({value:e.target.value});
     }
 
+    onClickTask(){
+        this.setState((prevState, props) => {
+            return {hasDone: !prevState.hasDone};
+        })
+    }
+
     render(){
         let editButtonValue = null;
         let deleteButtonValue = null;
@@ -53,12 +69,12 @@ class TaskItem extends Component{
             editButtonValue = 'Edit';
             deleteButtonValue = 'Delete';
         }
-
+        
         return <tr>
                 { 
                     (this.state.editMode) 
-                    ? <td><input type='text' value={this.state.value} onChange={this.onChangeValue}/> </td>
-                    : <td> <span>{this.props.task}</span></td>
+                    ? <td><input type='text' value={this.state.value} onChange={this.onChangeValue} className={this.state.hasError?'error':''}/></td>
+                    : <td onClick={this.onClickTask} className={this.state.hasDone ? 'task done-task':'task plan-task'}> <span>{this.props.task}</span></td>
                 }
 
                 <td><input onClick={this.editButtonHandler} type='button' value={editButtonValue}/></td>

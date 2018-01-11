@@ -5,7 +5,8 @@ class TaskAdder extends Component{
         super(props);
         this.onChangeValue = this.onChangeValue.bind(this);
         this.onAdd = this.onAdd.bind(this);
-        this.state = {value: ''};
+        this.state = {value: '', 
+                      hasError: false};
     }
 
     onChangeValue(e){
@@ -13,13 +14,17 @@ class TaskAdder extends Component{
     }
 
     onAdd(e){
-        this.props.addTask(this.state.value)
-        this.setState({value: ''});
+        this.setState(()=>{
+            if(this.props.addTask(this.state.value)){
+                return {value: '', hasError: false};
+            }
+            return {hasError: true};
+        });
     }
 
     render(){
         return <div>
-            <input type='text' onChange={this.onChangeValue} value={this.state.value}/>
+            <input type='text' className={this.state.hasError ? 'error':''} onChange={this.onChangeValue} value={this.state.value}/>
             <input type='button' value='Add' onClick={this.onAdd}/>
         </div>;
     }

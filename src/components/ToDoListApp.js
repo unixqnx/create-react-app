@@ -3,22 +3,43 @@ import React, {Component} from 'react';
 import List from "./List";
 import TaskList from "./TaskList";
 import TaskAdder from "./TaskAdder";
+import ErrorShower from "./ErrorShower";
 
  class ToDoListApp extends Component{
     
     constructor(props){
         super(props);
-        this.state = { List: this.props.arr };
+        this.state = { List: this.props.arr, Error:'' };
         this.updateTask = this.updateTask.bind(this);
         this.deleteTask = this.deleteTask.bind(this);
         this.addTask = this.addTask.bind(this);
+        this.getErrortext = this.getErrortext.bind(this);
     }
     
-    updateTask(value, index){
+    updateTask(task, index){
+        const error = this.getErrortext(task);
+        this.setState({Error:error});
+        if(error){
+            return false;
+        }       
         this.setState(prevState =>{
-            prevState.List[index] = value;
+            prevState.List[index] = task;
             return {List: prevState.List};
         });
+        return true;
+    }
+
+    addTask(task){
+        const error = this.getErrortext(task);
+        this.setState({Error:error});
+        if(error){
+            return false;
+        }
+        this.setState((prevState, props)=>{
+            prevState.List.push(task);
+            return {List: prevState.List};
+        });
+        return true;
     }
 
     deleteTask(index){
@@ -28,19 +49,24 @@ import TaskAdder from "./TaskAdder";
         });
     }
 
-    addTask(task){
-        this.setState((prevState, props)=>{
-            prevState.List.push(task);
-            return {List: prevState.List};
-        });
+    getErrortext(value){
+        if(!(this.state.List.indexOf(value) == -1)){
+            return 'TASK ALREADY EXISTS!';
+        }
+        if(!value){
+            return 'PLEASE ENTER TASK!';
+        }
+        return null;
     }
+
 
     render(){
         return <div>
             <h1>Hello world!</h1>
-            <List arr={this.props.arr}></List>
-            <TaskAdder List={this.state.List} addTask={this.addTask}/>
-            <TaskList List={this.state.List} updateTask={this.updateTask} deleteTask={this.deleteTask}/>
+            {/* <List arr={this.props.arr}></List> */}
+            <TaskAdder List={this.state.List} error={this.state.Error} addTask={this.addTask} repeatValueValidator={this.repeatValueValidator}/>
+            <ErrorShower error={this.state.Error}/>
+            <TaskList List={this.state.List} error={this.state.Error} updateTask={this.updateTask} deleteTask={this.deleteTask} repeatValueValidator={this.repeatValueValidator}/>
         </div>;
     }
 };
