@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 
 import List from "./List";
 import TaskList from "./TaskList";
 import TaskAdder from "./TaskAdder";
 import ErrorShower from "./ErrorShower";
+
+import TaskAdderActions from "../actions/TaskAdderActions";
+import TaskListActions from "../actions/TaskListActions";
 
  class ToDoListApp extends Component{
     
@@ -71,4 +75,16 @@ import ErrorShower from "./ErrorShower";
     }
 };
 
-export default ToDoListApp;
+const mapStateToProps = (props) => {
+    return { List: props.List };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return { AddTask: (task) => dispatch(TaskAdderActions.AddTask(task)),
+             EditTask: (index, newValue) => dispatch(TaskListActions.EditTask(index, newValue)),
+             DeleteTask: (index) => dispatch(TaskListActions.DeleteTask(index))
+           };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ToDoListApp);
+//export default ToDoListApp;
